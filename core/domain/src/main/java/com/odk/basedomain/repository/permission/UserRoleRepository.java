@@ -27,4 +27,30 @@ public interface UserRoleRepository extends JpaRepository<UserRoleDO, Long> {
      */
     UserRoleDO findByRoleCode(String roleCode);
 
+    @Query(value = "select count(1) from t_user_role where id IN ( SELECT role_id FROM t_user_role_rel WHERE user_id = :userId ) AND STATUS = '0'", nativeQuery = true)
+    int findAllUserRoleCount(@Param("userId") Long userId);
+
+    /**
+     * 分页查找
+     *
+     * @param userId
+     * @param pageLimit
+     * @param pageOffset
+     * @return
+     */
+    @Query(value = "select * from t_user_role where id IN ( SELECT role_id FROM t_user_role_rel WHERE user_id = :userId ) AND STATUS = '0' limit :pageLimit offset :pageOffset", nativeQuery = true)
+    List<UserRoleDO> findUserRoleByPage(@Param("userId") Long userId, @Param("pageLimit") int pageLimit, @Param("pageOffset") int pageOffset);
+
+
+    /**
+     * 分页查找
+     *
+     * @param pageLimit
+     * @param pageOffset
+     * @return
+     */
+    @Query(value = "select * from t_user_role limit :pageLimit offset :pageOffset", nativeQuery = true)
+    List<UserRoleDO> findUserRoleByPage(@Param("pageLimit") int pageLimit, @Param("pageOffset") int pageOffset);
+
+
 }

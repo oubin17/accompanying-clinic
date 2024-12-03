@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ServiceResponse> handleValidationException(NotLoginException e) {
         // 处理校验异常，可以根据需要返回适当的响应
 
-        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_EXPIRED, "token无效"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ServiceResponse.valueOfError(BizErrorCode.TOKEN_UNMATCHED, "token无效"), HttpStatus.BAD_REQUEST);
     }
 
     /**

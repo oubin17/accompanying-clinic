@@ -21,4 +21,6 @@ public class PermissionQueryResponse {
     private List<UserRoleVo> roles;
 
     private List<PermissionVO> permissions;
+
+    private int totalCount;
 }

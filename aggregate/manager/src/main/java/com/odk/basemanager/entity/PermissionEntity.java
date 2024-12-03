@@ -1,5 +1,6 @@
 package com.odk.basemanager.entity;
 
+import com.google.common.collect.Lists;
 import com.odk.basedomain.domain.permission.PermissionDO;
 import com.odk.basedomain.domain.permission.UserRoleDO;
 import lombok.Data;
@@ -24,10 +25,15 @@ public class PermissionEntity {
     /**
      * 角色列表
      */
-    private List<UserRoleDO> roles;
+    private List<UserRoleDO> roles = Lists.newArrayList();
 
     /**
      * 权限列表
      */
-    private List<PermissionDO> permissions;
+    private List<PermissionDO> permissions = Lists.newArrayList();
+
+    /**
+     * 分页总数
+     */
+    private int totalCount;
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * RoleAddRequest
@@ -21,12 +22,22 @@ public class RoleAddRequest extends BaseRequest {
     private static final long serialVersionUID = 3836916230018832242L;
 
     /**
-     * 权限码
+     * 角色id
+     */
+    private Long roleId;
+
+    /**
+     * 角色码
      */
     private String roleCode;
 
     /**
-     * 权限名称
+     * 角色名称
      */
     private String roleName;
+
+    /**
+     * 权限id列表
+     */
+    private List<Long> permissionIds;
 }

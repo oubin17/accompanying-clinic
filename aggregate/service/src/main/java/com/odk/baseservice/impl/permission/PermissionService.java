@@ -4,11 +4,13 @@ import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
 import com.odk.base.vo.response.ServiceResponse;
 import com.odk.baseapi.inter.permission.PermissionApi;
+import com.odk.baseapi.request.role.PermissionPageQueryRequest;
 import com.odk.baseapi.request.role.RoleAddRequest;
 import com.odk.baseapi.request.role.UserRoleRelaRequest;
 import com.odk.baseapi.response.PermissionQueryResponse;
 import com.odk.baseapi.vo.PermissionVO;
 import com.odk.baseapi.vo.UserRoleVo;
+import com.odk.basedomain.domain.permission.PermissionDO;
 import com.odk.basemanager.deal.permission.PermissionManager;
 import com.odk.basemanager.entity.PermissionEntity;
 import com.odk.baseservice.template.AbstractApiImpl;
@@ -31,6 +33,113 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
 
     private PermissionManager permissionManager;
 
+    @Override
+    public ServiceResponse<PermissionQueryResponse> userPermissionByPage(PermissionPageQueryRequest request) {
+        return super.queryProcess(BizScene.USER_PERMISSION_QUERY, request, new QueryApiCallBack<PermissionEntity, PermissionQueryResponse>() {
+
+            @Override
+            protected PermissionEntity doProcess(Object args) {
+                PermissionPageQueryRequest queryRequest = (PermissionPageQueryRequest) args;
+                return permissionManager.getPermissionsByPage(queryRequest.getPageNum(), queryRequest.getPageSize());
+            }
+
+            @Override
+            protected PermissionQueryResponse convertResult(PermissionEntity permissionEntity) {
+                if (null == permissionEntity) {
+                    return null;
+                }
+                PermissionQueryResponse permissionQueryResponse = new PermissionQueryResponse();
+                permissionQueryResponse.setTotalCount(permissionEntity.getTotalCount());
+                permissionQueryResponse.setUserId(permissionEntity.getUserId());
+                List<UserRoleVo> roles = permissionEntity.getRoles().stream().map(userRoleDO -> {
+                    UserRoleVo userRoleVo = new UserRoleVo();
+                    userRoleVo.setId(userRoleDO.getId());
+                    userRoleVo.setRoleCode(userRoleDO.getRoleCode());
+                    userRoleVo.setRoleName(userRoleDO.getRoleName());
+                    userRoleVo.setStatus(userRoleDO.getStatus());
+                    return userRoleVo;
+                }).collect(Collectors.toList());
+                permissionQueryResponse.setRoles(roles);
+                List<PermissionVO> permissions = permissionEntity.getPermissions().stream().map(permissionDO -> {
+                    PermissionVO permissionVO = new PermissionVO();
+                    permissionVO.setId(permissionDO.getId());
+                    permissionVO.setPermissionCode(permissionDO.getPermissionCode());
+                    permissionVO.setPermissionName(permissionDO.getPermissionName());
+                    permissionVO.setStatus(permissionDO.getStatus());
+                    return permissionVO;
+                }).collect(Collectors.toList());
+                permissionQueryResponse.setPermissions(permissions);
+                return permissionQueryResponse;
+            }
+
+        });
+    }
+
+    @Override
+    public ServiceResponse<PermissionQueryResponse> allPermission(PermissionPageQueryRequest request) {
+        return super.queryProcess(BizScene.USER_PERMISSION_QUERY, request, new QueryApiCallBack<PermissionEntity, PermissionQueryResponse>() {
+
+
+            @Override
+            protected PermissionEntity doProcess(Object args) {
+                PermissionPageQueryRequest queryRequest = (PermissionPageQueryRequest) args;
+                return permissionManager.getAllPermissionsByPage(queryRequest.getPageNum(), queryRequest.getPageSize());
+            }
+
+            @Override
+            protected PermissionQueryResponse convertResult(PermissionEntity permissionEntity) {
+                if (null == permissionEntity) {
+                    return null;
+                }
+                PermissionQueryResponse permissionQueryResponse = new PermissionQueryResponse();
+                permissionQueryResponse.setTotalCount(permissionEntity.getTotalCount());
+                permissionQueryResponse.setUserId(permissionEntity.getUserId());
+                List<UserRoleVo> roles = permissionEntity.getRoles().stream().map(userRoleDO -> {
+                    UserRoleVo userRoleVo = new UserRoleVo();
+                    userRoleVo.setId(userRoleDO.getId());
+                    userRoleVo.setRoleCode(userRoleDO.getRoleCode());
+                    userRoleVo.setRoleName(userRoleDO.getRoleName());
+                    userRoleVo.setStatus(userRoleDO.getStatus());
+                    return userRoleVo;
+                }).collect(Collectors.toList());
+                permissionQueryResponse.setRoles(roles);
+                List<PermissionVO> permissions = permissionEntity.getPermissions().stream().map(permissionDO -> {
+                    PermissionVO permissionVO = new PermissionVO();
+                    permissionVO.setId(permissionDO.getId());
+                    permissionVO.setPermissionCode(permissionDO.getPermissionCode());
+                    permissionVO.setPermissionName(permissionDO.getPermissionName());
+                    permissionVO.setStatus(permissionDO.getStatus());
+                    return permissionVO;
+                }).collect(Collectors.toList());
+                permissionQueryResponse.setPermissions(permissions);
+                return permissionQueryResponse;
+            }
+
+        });
+    }
+
+    @Override
+    public ServiceResponse<List<PermissionVO>> allPermissions() {
+        return super.queryProcess(BizScene.USER_PERMISSION_QUERY, null, new QueryApiCallBack<List<PermissionDO>, List<PermissionVO>>() {
+
+            @Override
+            protected List<PermissionDO> doProcess(Object args) {
+                return permissionManager.getAllPermissions();
+            }
+
+            @Override
+            protected List<PermissionVO> convertResult(List<PermissionDO> permissionDOS) {
+                return permissionDOS.stream().map(permissionDO -> {
+                    PermissionVO permissionVO = new PermissionVO();
+                    permissionVO.setId(permissionDO.getId());
+                    permissionVO.setPermissionCode(permissionDO.getPermissionCode());
+                    permissionVO.setPermissionName(permissionDO.getPermissionName());
+                    permissionVO.setStatus(permissionDO.getStatus());
+                    return permissionVO;
+                }).collect(Collectors.toList());
+            }
+        });
+    }
 
     @Override
     public ServiceResponse<PermissionQueryResponse> userPermission(Long userId) {
@@ -89,15 +198,9 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
             }
 
             @Override
-            protected Object convert(Object request) {
-                RoleAddRequest addRequest = (RoleAddRequest) request;
-                return new String[]{addRequest.getRoleCode(), addRequest.getRoleName()};
-            }
-
-            @Override
             protected Long doProcess(Object args) {
-                String[] args1 = (String[]) args;
-                return permissionManager.addRole(args1[0], args1[1]);
+                RoleAddRequest request = (RoleAddRequest) args;
+                return permissionManager.addRole(request.getRoleCode(), request.getRoleName(), request.getPermissionIds());
             }
 
             @Override
