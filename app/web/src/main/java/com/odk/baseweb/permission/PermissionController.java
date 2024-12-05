@@ -44,31 +44,24 @@ public class PermissionController {
     /**
      * 查询用户角色权限
      *
-     * @param pageNum
-     * @param pageSize
+     * @param request
      * @return
      */
     @GetMapping("/list/userId")
-    public ServiceResponse<PermissionQueryResponse> queryUserPermissionByPage(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        PermissionPageQueryRequest request = new PermissionPageQueryRequest(pageNum, pageSize);
+    public ServiceResponse<PermissionQueryResponse> queryUserPermissionByPage(@ModelAttribute PermissionPageQueryRequest request) {
         return permissionApi.userPermissionByPage(request);
     }
 
     /**
      * 查询所有角色权限
      *
-     * @param pageNum
-     * @param pageSize
+     * @param request
      * @return
      */
     @GetMapping("/list")
-    public ServiceResponse<PermissionQueryResponse> allPermissionByPage(@RequestParam("pageNum") int pageNum, @RequestParam("pageSize") int pageSize) {
-        PermissionPageQueryRequest request = new PermissionPageQueryRequest(pageNum, pageSize);
+    public ServiceResponse<PermissionQueryResponse> allPermissionByPage(@ModelAttribute PermissionPageQueryRequest request) {
         return permissionApi.allPermission(request);
     }
-
-
-
 
     /**
      * 获取所有的权限集合

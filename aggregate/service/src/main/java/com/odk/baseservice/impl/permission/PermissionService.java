@@ -40,7 +40,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
             @Override
             protected PermissionEntity doProcess(Object args) {
                 PermissionPageQueryRequest queryRequest = (PermissionPageQueryRequest) args;
-                return permissionManager.getPermissionsByPage(queryRequest.getPageNum(), queryRequest.getPageSize());
+                return permissionManager.getPermissionsByPage(queryRequest);
             }
 
             @Override
@@ -83,7 +83,7 @@ public class PermissionService extends AbstractApiImpl implements PermissionApi 
             @Override
             protected PermissionEntity doProcess(Object args) {
                 PermissionPageQueryRequest queryRequest = (PermissionPageQueryRequest) args;
-                return permissionManager.getAllPermissionsByPage(queryRequest.getPageNum(), queryRequest.getPageSize());
+                return permissionManager.getAllPermissionsByPage(queryRequest);
             }
 
             @Override

@@ -1,7 +1,10 @@
 package com.odk.baseapi.request.role;
 
+import com.odk.base.vo.request.PageRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.io.Serial;
 
 /**
  * PermissionPageQueryRequest
@@ -12,9 +15,9 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class PermissionPageQueryRequest {
+public class PermissionPageQueryRequest extends PageRequest {
 
-    private int pageNum;
+    @Serial
+    private static final long serialVersionUID = 6002235311838207119L;
 
-    private int pageSize;
 }

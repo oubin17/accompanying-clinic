@@ -1,2 +1,2 @@
-# base-template
-Spring Boot3项目基础框架
+# 陪诊项目
+陪诊项目

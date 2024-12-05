@@ -2,6 +2,8 @@ package com.odk.baseapi.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * UserRoleVo
  *
@@ -31,4 +33,9 @@ public class UserRoleVo {
      * 角色状态
      */
     private String status;
+
+    /**
+     * 角色对应的权限集合
+     */
+    private List<PermissionVO> permissions;
 }

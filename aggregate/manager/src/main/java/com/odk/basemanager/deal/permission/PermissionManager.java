@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.odk.base.enums.common.CommonStatusEnum;
 import com.odk.base.exception.AssertUtil;
 import com.odk.base.exception.BizErrorCode;
+import com.odk.base.vo.request.PageRequest;
 import com.odk.basedomain.domain.permission.PermissionDO;
 import com.odk.basedomain.domain.permission.RolePermissionRelDO;
 import com.odk.basedomain.domain.permission.UserRoleDO;
@@ -70,13 +71,13 @@ public class PermissionManager {
         return permissionEntity;
     }
 
-    public PermissionEntity getPermissionsByPage(int pageNum, int pageSize) {
+    public PermissionEntity getPermissionsByPage(PageRequest pageRequest) {
         PermissionEntity permissionEntity = new PermissionEntity();
 
         int allUserRoleCount = userRoleRepository.findAllUserRoleCount(StpUtil.getLoginIdAsLong());
         permissionEntity.setTotalCount(allUserRoleCount);
         if (allUserRoleCount > 0) {
-            List<UserRoleDO> userRoleByPage = userRoleRepository.findUserRoleByPage(StpUtil.getLoginIdAsLong(), pageSize, pageNum * pageSize);
+            List<UserRoleDO> userRoleByPage = userRoleRepository.findUserRoleByPage(StpUtil.getLoginIdAsLong(), pageRequest.getPageSize(), pageRequest.getOffset());
             permissionEntity.setRoles(userRoleByPage);
             if (!CollectionUtils.isEmpty(userRoleByPage)) {
                 List<Long> roleIds = userRoleByPage.stream().map(UserRoleDO::getId).collect(Collectors.toList());
@@ -89,10 +90,11 @@ public class PermissionManager {
         return permissionEntity;
     }
 
-    public PermissionEntity getAllPermissionsByPage(int pageNum, int pageSize) {
+    public PermissionEntity getAllPermissionsByPage(PageRequest pageRequest) {
         PermissionEntity permissionEntity = new PermissionEntity();
-        List<UserRoleDO> userRoleByPage =userRoleRepository.findUserRoleByPage(pageSize, pageNum * pageSize);
+        List<UserRoleDO> userRoleByPage =userRoleRepository.findUserRoleByPage(pageRequest.getPageSize(), pageRequest.getOffset());
         permissionEntity.setRoles(userRoleByPage);
+        permissionEntity.setTotalCount(10);
         if (!CollectionUtils.isEmpty(userRoleByPage)) {
             List<Long> roleIds = userRoleByPage.stream().map(UserRoleDO::getId).collect(Collectors.toList());
             List<PermissionDO> allRolePermission = permissionRepository.findAllRolePermission(roleIds);
@@ -104,7 +106,7 @@ public class PermissionManager {
     }
 
     public List<PermissionDO> getAllPermissions() {
-        return permissionRepository.findByStatus(CommonStatusEnum.NORMAL.getCode());
+        return permissionRepository.findAll();
     }
 
     /**
