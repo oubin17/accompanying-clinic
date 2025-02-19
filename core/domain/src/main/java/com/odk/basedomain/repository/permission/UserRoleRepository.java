@@ -14,10 +14,10 @@ import java.util.List;
  * @version: 1.0
  * @author: oubin on 2024/11/8
  */
-public interface UserRoleRepository extends JpaRepository<UserRoleDO, Long> {
+public interface UserRoleRepository extends JpaRepository<UserRoleDO, String> {
 
     @Query(value = "select * from t_user_role where id IN ( SELECT role_id FROM t_user_role_rel WHERE user_id = :userId ) AND STATUS = '0'", nativeQuery = true)
-    List<UserRoleDO> findAllUserRole(@Param("userId") Long userId);
+    List<UserRoleDO> findAllUserRole(@Param("userId") String userId);
 
     /**
      * 根据角色码查询角色
@@ -28,7 +28,7 @@ public interface UserRoleRepository extends JpaRepository<UserRoleDO, Long> {
     UserRoleDO findByRoleCode(String roleCode);
 
     @Query(value = "select count(1) from t_user_role where id IN ( SELECT role_id FROM t_user_role_rel WHERE user_id = :userId ) AND STATUS = '0'", nativeQuery = true)
-    int findAllUserRoleCount(@Param("userId") Long userId);
+    int findAllUserRoleCount(@Param("userId") String userId);
 
     /**
      * 分页查找

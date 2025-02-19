@@ -39,5 +39,5 @@ public class RoleAddRequest extends BaseRequest {
     /**
      * 权限id列表
      */
-    private List<Long> permissionIds;
+    private List<String> permissionIds;
 }
